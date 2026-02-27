@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
-const claimRoutes = require("./routes/claimRoutes");
+const claimRoutes = require("./routes/claimRoutes"); // use express routes defined in routes/claimRoutes.js
 
 const app = express();
 const PORT = process.env.PORT || 5000;
