@@ -140,7 +140,16 @@ exports.predictClaim = async (req, res) => {
       riskScore: prediction.riskScore,
       fraud: prediction.fraud,
       probability: prediction.probability,
-      reasons: prediction.reasons || []
+      status: prediction.status || "Low Risk",
+      confidence: prediction.confidence || 0,
+      reasons: prediction.reasons || [],
+      top_contributing_factors: prediction.top_contributing_factors || [],
+      anomaly_score: prediction.anomaly_score || 0,
+      is_anomaly: prediction.is_anomaly || false,
+      ensemble_votes: prediction.ensemble_votes || {},
+      model_agreement: prediction.model_agreement || 0,
+      model_version: prediction.model_version || "2.0-XAI",
+      explanation_method: prediction.explanation_method || "Heuristic"
     });
 
     await claim.save();

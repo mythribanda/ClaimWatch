@@ -43,7 +43,28 @@ const claimSchema = new mongoose.Schema(
     riskScore: { type: Number, required: true },
     fraud: { type: Number, required: true },
     probability: { type: Number, required: true },
-    reasons: [{ type: String }]
+    status: { type: String, enum: ["Low Risk", "Medium Risk", "High Risk", "Critical"], default: "Low Risk" },
+    confidence: { type: Number, default: 0 },
+    reasons: [{ type: String }],
+    
+    // Explainability fields
+    top_contributing_factors: [
+      {
+        feature: String,
+        importance: Number,
+        impact: { type: String, enum: ["High", "Medium", "Low"] }
+      }
+    ],
+    anomaly_score: { type: Number, default: 0 },
+    is_anomaly: { type: Boolean, default: false },
+    ensemble_votes: {
+      RandomForest: Number,
+      XGBoost: Number,
+      DecisionTree: Number
+    },
+    model_agreement: { type: Number, default: 0 },
+    model_version: { type: String, default: "2.0-XAI" },
+    explanation_method: { type: String, default: "Heuristic" }
   },
   {
     timestamps: { createdAt: "createdAt", updatedAt: false }
