@@ -30,7 +30,6 @@ class ClaimInput(BaseModel):
 
   property_damage: str
   police_report_available: str
-  fraud_reported: str
 
   auto_make: str
   auto_model: str
@@ -64,11 +63,17 @@ class ClaimInput(BaseModel):
 
 # Output Schema
 class PredictionOutput(BaseModel):
-
   fraud: int
   probability: float
   riskScore: int
   reasons: List[str]
+  confidence: float = 0.8
+  anomaly_score: float = 0.0
+  is_anomaly: bool = False
+  top_contributing_factors: List[dict] = []
+  model_agreement: int = 100
+  explanation_method: str = "Heuristic"
+  status: str = "Low Risk"
 
 
 @app.get("/")
@@ -124,10 +129,6 @@ def predict_claim(data: ClaimInput):
     if data.property_damage == "Yes" and data.police_report_available == "No":
         score += 15
 
-    # Reported as fraud by someone
-    if data.fraud_reported == "Yes":
-        score += 20
-
     # Incorporate numeric dimensions
     if data.total_claim_amount > 20000:
         score += 20
@@ -153,17 +154,41 @@ def predict_claim(data: ClaimInput):
         reasons.append(f"High-risk incident type: {data.incident_type}")
     if data.property_damage == "Yes" and data.police_report_available == "No":
         reasons.append("Property damage without police report")
-    if data.fraud_reported == "Yes":
-        reasons.append("Fraud already reported flag is Yes")
     if data.total_claim_amount > 20000:
         reasons.append(f"High claim amount: ${data.total_claim_amount}")
 
     if not reasons:
         reasons.append("No strong fraud indicators")
 
+    # Determine status based on risk score
+    if risk_score >= 70:
+        status = "High Risk"
+    elif risk_score >= 40:
+        status = "Medium Risk"
+    else:
+        status = "Low Risk"
+
+    # Calculate contributing factors
+    top_factors = []
+    if data.incident_severity in {"Total Loss", "Major Damage"}:
+        top_factors.append({"feature": f"Incident Severity ({data.incident_severity})", "importance": 0.25})
+    if data.insured_hobbies in risky_hobbies:
+        top_factors.append({"feature": f"Risky Hobby ({data.insured_hobbies})", "importance": 0.15})
+    if data.total_claim_amount > 20000:
+        top_factors.append({"feature": f"High Claim Amount (${data.total_claim_amount})", "importance": 0.20})
+    if data.property_damage == "Yes" and data.police_report_available == "No":
+        top_factors.append({"feature": "Property Damage without Police Report", "importance": 0.15})
+
     return PredictionOutput(
         fraud=fraud_flag,
         probability=prob,
         riskScore=risk_score,
         reasons=reasons,
+        confidence=prob,  # Use probability as confidence
+        anomaly_score=min(prob * 2, 1.0),  # Anomaly score based on fraud probability
+        is_anomaly=prob >= 0.5,
+        top_contributing_factors=top_factors,
+        model_agreement=100 if len(top_factors) > 0 else 75,
+        explanation_method="Heuristic Rules Engine",
+        status=status,
     )

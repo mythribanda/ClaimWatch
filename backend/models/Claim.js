@@ -17,7 +17,6 @@ const claimSchema = new mongoose.Schema(
     incident_city: { type: String, required: true },
     property_damage: { type: String, required: true },
     police_report_available: { type: String, required: true },
-    fraud_reported: { type: String, required: true },
     auto_make: { type: String, required: true },
     auto_model: { type: String, required: true },
     months_as_customer: { type: Number, required: true },
