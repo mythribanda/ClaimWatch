@@ -1,4 +1,8 @@
+import { useTheme } from "../context/ThemeContext.jsx";
+
 const ResultCard = ({ result }) => {
+  const theme = useTheme();
+
   if (!result) return null;
 
   const {
@@ -16,269 +20,285 @@ const ResultCard = ({ result }) => {
     explanation_method = "Heuristic"
   } = result;
 
-  // Status color mapping
-  const statusColors = {
-    "Low Risk": "#10b981",
-    "Medium Risk": "#f59e0b",
-    "High Risk": "#ef4444",
-    "Critical": "#dc2626"
-  };
-
-  const statusColor = statusColors[status] || "#10b981";
+  const isFraudulent = fraud === 1;
+  const borderColor = isFraudulent ? theme.colors.danger : theme.colors.success;
+  const backgroundColor = isFraudulent 
+    ? "rgba(239, 68, 68, 0.1)" 
+    : "rgba(16, 185, 129, 0.1)";
+  const textColor = isFraudulent ? "#fca5a5" : "#86efac";
+  const titleColor = isFraudulent ? theme.colors.danger : theme.colors.success;
 
   return (
     <section
       style={{
-        marginTop: "1.5rem",
-        padding: "1.5rem",
-        borderRadius: "1rem",
-        background:
-          "linear-gradient(135deg, rgba(15,23,42,0.9), rgba(30,64,175,0.8))",
-        border: "1px solid rgba(129, 140, 248, 0.4)",
-        boxShadow: "0 20px 40px rgba(15,23,42,0.7)"
+        marginTop: "2rem",
+        padding: "2rem",
+        borderRadius: "0.75rem",
+        backgroundColor: theme.colors.bgSecondary,
+        border: `2px solid ${borderColor}`,
+        boxShadow: `0 10px 30px ${isFraudulent ? "rgba(239, 68, 68, 0.2)" : "rgba(16, 185, 129, 0.2)"}`,
       }}
     >
-      <h2 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem" }}>
-        📊 Prediction Result
-      </h2>
-      <p style={{ fontSize: "0.9rem", color: "#cbd5f5", marginBottom: "1rem" }}>
-        Explainable AI Assessment for this claim
-      </p>
-
-      {/* Main Metrics Grid */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-          gap: "1rem",
-          marginBottom: "1.25rem"
+          gridTemplateColumns: "auto 1fr",
+          gap: "2rem",
+          alignItems: "start",
         }}
       >
-        <div
-          style={{
-            padding: "0.8rem",
-            borderRadius: "0.75rem",
-            backgroundColor: "rgba(15,23,42,0.7)",
-            border: "1px solid rgba(148, 163, 184, 0.3)"
-          }}
-        >
-          <p style={{ fontSize: "0.75rem", color: "#9ca3af", fontWeight: 600 }}>Risk Score</p>
-          <p style={{ fontSize: "1.8rem", fontWeight: 700, color: statusColor }}>
+        {/* Icon and Title */}
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "120px",
+              height: "120px",
+              borderRadius: "50%",
+              backgroundColor: borderColor,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "3.5rem",
+              color: "#ffffff",
+              fontWeight: 900,
+            }}
+          >
+            {isFraudulent ? "⚠️" : "✓"}
+          </div>
+          <h3
+            style={{
+              marginTop: "1rem",
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              color: titleColor,
+            }}
+          >
+            {isFraudulent ? "Fraudulent" : "Genuine"}
+          </h3>
+          <p style={{ fontSize: "2rem", fontWeight: 800, color: titleColor, marginTop: "0.5rem" }}>
             {riskScore}%
           </p>
+          <p style={{ fontSize: "0.85rem", color: theme.colors.textSecondary }}>Risk Score</p>
         </div>
 
-        <div
-          style={{
-            padding: "0.8rem",
-            borderRadius: "0.75rem",
-            backgroundColor: "rgba(15,23,42,0.7)",
-            border: "1px solid rgba(148, 163, 184, 0.3)"
-          }}
-        >
-          <p style={{ fontSize: "0.75rem", color: "#9ca3af", fontWeight: 600 }}>
-            Fraud Probability
-          </p>
-          <p style={{ fontSize: "1.8rem", fontWeight: 700 }}>
-            {probability != null ? (probability * 100).toFixed(1) : "-"}%
-          </p>
-        </div>
-
-        <div
-          style={{
-            padding: "0.8rem",
-            borderRadius: "0.75rem",
-            backgroundColor: "rgba(15,23,42,0.7)",
-            border: "1px solid rgba(148, 163, 184, 0.3)"
-          }}
-        >
-          <p style={{ fontSize: "0.75rem", color: "#9ca3af", fontWeight: 600 }}>Status</p>
-          <p
+        {/* Metrics */}
+        <div>
+          <div
             style={{
-              fontSize: "1.1rem",
-              fontWeight: 700,
-              color: statusColor
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1.5rem",
+              marginBottom: "1.5rem",
             }}
           >
-            {status}
-          </p>
-        </div>
-
-        <div
-          style={{
-            padding: "0.8rem",
-            borderRadius: "0.75rem",
-            backgroundColor: "rgba(15,23,42,0.7)",
-            border: "1px solid rgba(148, 163, 184, 0.3)"
-          }}
-        >
-          <p style={{ fontSize: "0.75rem", color: "#9ca3af", fontWeight: 600 }}>
-            Confidence
-          </p>
-          <p style={{ fontSize: "1.8rem", fontWeight: 700, color: "#60a5fa" }}>
-            {(confidence * 100).toFixed(0)}%
-          </p>
-        </div>
-      </div>
-
-      {/* Model Agreement & Anomaly Detection */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1rem",
-          marginBottom: "1.25rem"
-        }}
-      >
-        <div
-          style={{
-            padding: "0.8rem",
-            borderRadius: "0.75rem",
-            backgroundColor: "rgba(59, 130, 246, 0.1)",
-            border: "1px solid rgba(59, 130, 246, 0.3)"
-          }}
-        >
-          <p style={{ fontSize: "0.75rem", color: "#60a5fa", fontWeight: 600 }}>
-            🤝 Model Agreement
-          </p>
-          <p style={{ fontSize: "1.5rem", fontWeight: 700, color: "#60a5fa" }}>
-            {model_agreement}%
-          </p>
-          <p style={{ fontSize: "0.7rem", color: "#93c5fd", marginTop: "0.25rem" }}>
-            Ensemble consensus
-          </p>
-        </div>
-
-        <div
-          style={{
-            padding: "0.8rem",
-            borderRadius: "0.75rem",
-            backgroundColor: is_anomaly
-              ? "rgba(239, 68, 68, 0.1)"
-              : "rgba(34, 197, 94, 0.1)",
-            border: is_anomaly
-              ? "1px solid rgba(239, 68, 68, 0.3)"
-              : "1px solid rgba(34, 197, 94, 0.3)"
-          }}
-        >
-          <p
-            style={{
-              fontSize: "0.75rem",
-              color: is_anomaly ? "#f87171" : "#4ade80",
-              fontWeight: 600
-            }}
-          >
-            🔍 Anomaly Score
-          </p>
-          <p
-            style={{
-              fontSize: "1.5rem",
-              fontWeight: 700,
-              color: is_anomaly ? "#f87171" : "#4ade80"
-            }}
-          >
-            {(anomaly_score * 100).toFixed(0)}%
-          </p>
-          <p
-            style={{
-              fontSize: "0.7rem",
-              color: is_anomaly ? "#fca5a5" : "#86efac",
-              marginTop: "0.25rem"
-            }}
-          >
-            {is_anomaly ? "⚠️ Anomalous pattern" : "✓ Normal pattern"}
-          </p>
-        </div>
-      </div>
-
-      {/* Top Contributing Factors */}
-      {top_contributing_factors && top_contributing_factors.length > 0 && (
-        <div style={{ marginBottom: "1.25rem" }}>
-          <p
-            style={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              marginBottom: "0.5rem",
-              color: "#93c5fd"
-            }}
-          >
-            🎯 Top Contributing Risk Factors:
-          </p>
-          <div style={{ paddingLeft: "0.75rem" }}>
-            {top_contributing_factors.map((factor, idx) => (
+            {/* Fraud Probability */}
+            <div>
+              <p style={{ fontSize: "0.85rem", color: theme.colors.textSecondary, marginBottom: "0.5rem", fontWeight: 500 }}>
+                Fraud Probability
+              </p>
               <div
-                key={idx}
                 style={{
+                  width: "100%",
+                  height: "8px",
+                  backgroundColor: theme.colors.bgTertiary,
+                  borderRadius: "4px",
+                  overflow: "hidden",
                   marginBottom: "0.5rem",
-                  padding: "0.5rem",
-                  borderRadius: "0.5rem",
-                  backgroundColor: "rgba(30, 58, 138, 0.4)",
-                  border: "1px solid rgba(96, 165, 250, 0.2)"
                 }}
               >
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
+                    height: "100%",
+                    width: `${(probability * 100).toFixed(1)}%`,
+                    backgroundColor: isFraudulent ? theme.colors.danger : theme.colors.success,
+                    transition: "width 0.5s ease",
                   }}
-                >
-                  <span style={{ fontSize: "0.85rem", color: "#e5e7eb" }}>
-                    {idx + 1}. {factor.feature}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "0.8rem",
-                      fontWeight: 600,
-                      color:
-                        factor.impact === "High"
-                          ? "#ef4444"
-                          : factor.impact === "Medium"
-                          ? "#f59e0b"
-                          : "#10b981"
-                    }}
-                  >
-                    {factor.impact} ({(factor.importance * 100).toFixed(2)}%)
-                  </span>
-                </div>
+                />
               </div>
-            ))}
+              <p style={{ fontSize: "0.95rem", fontWeight: 700, color: theme.colors.text }}>
+                {probability != null ? (probability * 100).toFixed(1) : "-"}%
+              </p>
+            </div>
+
+            {/* Confidence */}
+            <div>
+              <p style={{ fontSize: "0.85rem", color: theme.colors.textSecondary, marginBottom: "0.5rem", fontWeight: 500 }}>
+                Confidence Level
+              </p>
+              <div
+                style={{
+                  width: "100%",
+                  height: "8px",
+                  backgroundColor: theme.colors.bgTertiary,
+                  borderRadius: "4px",
+                  overflow: "hidden",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    width: `${(confidence * 100).toFixed(0)}%`,
+                    backgroundColor: theme.colors.primary,
+                    transition: "width 0.5s ease",
+                  }}
+                />
+              </div>
+              <p style={{ fontSize: "0.95rem", fontWeight: 700, color: theme.colors.text }}>
+                {(confidence * 100).toFixed(0)}%
+              </p>
+            </div>
+          </div>
+
+          {/* Analysis Section */}
+          <div
+            style={{
+              backgroundColor: theme.colors.bgTertiary,
+              padding: "1rem",
+              borderRadius: "0.5rem",
+              borderLeft: `3px solid ${borderColor}`,
+            }}
+          >
+            <p style={{ fontSize: "0.85rem", fontWeight: 600, color: theme.colors.text, marginBottom: "0.5rem" }}>
+              Risk Assessment:
+            </p>
+            <p style={{ fontSize: "0.9rem", color: theme.colors.textSecondary, lineHeight: "1.6" }}>
+              {reasons && reasons.length > 0
+                ? reasons[0]
+                : "Claim parameters fall within normal ranges. Low-risk profile based on policy history and incident details."}
+            </p>
           </div>
         </div>
-      )}
-
-      {/* Reasons */}
-      <div style={{ marginBottom: "1rem" }}>
-        <p style={{ fontSize: "0.9rem", fontWeight: 600, marginBottom: "0.4rem", color: "#fbbf24" }}>
-          💡 Reasons:
-        </p>
-        <ul style={{ paddingLeft: "1.25rem", fontSize: "0.85rem", color: "#e5e7eb" }}>
-          {(reasons && reasons.length > 0
-            ? reasons
-            : ["No specific risk reasons provided."]
-          ).map((reason, idx) => (
-            <li key={idx} style={{ marginBottom: "0.25rem" }}>
-              • {reason}
-            </li>
-          ))}
-        </ul>
       </div>
 
-      {/* Model Details */}
+      {/* Additional Details - Collapsible */}
       <div
         style={{
-          padding: "0.75rem",
-          borderRadius: "0.5rem",
-          backgroundColor: "rgba(107, 114, 128, 0.1)",
-          border: "1px solid rgba(107, 114, 128, 0.2)",
-          fontSize: "0.75rem",
-          color: "#9ca3af"
+          marginTop: "1.5rem",
+          paddingTop: "1.5rem",
+          borderTop: `1px solid ${theme.colors.border}`,
         }}
       >
-        <p>
-          <strong>Model:</strong> {explanation_method} | <strong>Version:</strong> 2.0-XAI |{" "}
-          <strong>Prediction:</strong> {fraud === 1 ? "⚠️ Likely Fraudulent" : "✅ Likely Legitimate"}
-        </p>
+        <details style={{ cursor: "pointer" }}>
+          <summary
+            style={{
+              fontSize: "0.9rem",
+              fontWeight: 600,
+              color: theme.colors.primary,
+              userSelect: "none",
+              padding: "0.5rem 0",
+            }}
+          >
+            📊 Detailed Metrics & Explainability
+          </summary>
+          <div style={{ marginTop: "1rem" }}>
+            {/* Metrics Grid */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                gap: "1rem",
+                marginBottom: "1rem",
+              }}
+            >
+              <div
+                style={{
+                  padding: "0.75rem",
+                  borderRadius: "0.5rem",
+                  backgroundColor: theme.colors.bgTertiary,
+                  border: `1px solid ${theme.colors.border}`,
+                }}
+              >
+                <p style={{ fontSize: "0.75rem", color: theme.colors.textSecondary }}>Model Agreement</p>
+                <p style={{ fontSize: "1.5rem", fontWeight: 700, color: theme.colors.primary }}>
+                  {model_agreement}%
+                </p>
+              </div>
+
+              <div
+                style={{
+                  padding: "0.75rem",
+                  borderRadius: "0.5rem",
+                  backgroundColor: theme.colors.bgTertiary,
+                  border: `1px solid ${theme.colors.border}`,
+                }}
+              >
+                <p style={{ fontSize: "0.75rem", color: theme.colors.textSecondary }}>Status</p>
+                <p style={{ fontSize: "0.95rem", fontWeight: 700, color: titleColor }}>
+                  {status}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  padding: "0.75rem",
+                  borderRadius: "0.5rem",
+                  backgroundColor: theme.colors.bgTertiary,
+                  border: `1px solid ${theme.colors.border}`,
+                }}
+              >
+                <p style={{ fontSize: "0.75rem", color: theme.colors.textSecondary }}>Anomaly Score</p>
+                <p style={{ fontSize: "1.3rem", fontWeight: 700, color: theme.colors.text }}>
+                  {(anomaly_score * 100).toFixed(0)}%
+                </p>
+              </div>
+            </div>
+
+            {/* Top Contributing Factors */}
+            {top_contributing_factors && top_contributing_factors.length > 0 && (
+              <div style={{ marginBottom: "1rem" }}>
+                <p style={{ fontSize: "0.85rem", fontWeight: 600, color: theme.colors.text, marginBottom: "0.5rem" }}>
+                  🎯 Top Contributing Factors:
+                </p>
+                <div
+                  style={{
+                    display: "grid",
+                    gap: "0.5rem",
+                  }}
+                >
+                  {top_contributing_factors.slice(0, 5).map((factor, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "0.75rem",
+                        backgroundColor: theme.colors.bgTertiary,
+                        borderRadius: "0.375rem",
+                        fontSize: "0.85rem",
+                        border: `1px solid ${theme.colors.border}`,
+                      }}
+                    >
+                      <span style={{ color: theme.colors.text }}>{factor.feature}</span>
+                      <span style={{ color: theme.colors.primary, fontWeight: 600 }}>
+                        {(factor.importance * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Model Information */}
+            <div
+              style={{
+                padding: "0.75rem",
+                borderRadius: "0.375rem",
+                backgroundColor: theme.colors.bgTertiary,
+                fontSize: "0.8rem",
+                color: theme.colors.textSecondary,
+                border: `1px solid ${theme.colors.border}`,
+                lineHeight: "1.6",
+              }}
+            >
+              <p>
+                <strong style={{ color: theme.colors.text }}>Method:</strong> {explanation_method} • {" "}
+                <strong style={{ color: theme.colors.text }}>Anomaly:</strong> {" "}
+                {is_anomaly ? "⚠️ Detected" : "✓ Normal"}
+              </p>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
   );
