@@ -142,14 +142,21 @@ print("Model retrained on full dataset")
 
 import pickle
 
-# Save model
+# Save ensemble models
 pickle.dump(rf_final, open("fraud_model.pkl", "wb"))
+pickle.dump(xgb, open("xgb_model.pkl", "wb"))
+pickle.dump(dt, open("dt_model.pkl", "wb"))
 
 # Save scaler
 pickle.dump(scaler_final, open("scaler.pkl", "wb"))
 
 # Save feature names
-pickle.dump(list(X.columns), open("feature_names.pkl", "wb"))
-pickle.dump(encoders, open("encoders.pkl", "wb"))
-print("✅ Model, Scaler, and Feature Names saved successfully!")
+feature_names = list(X.columns)
+pickle.dump(feature_names, open("feature_names.pkl", "wb"))
+
+# Save feature importance from Random Forest
+feature_importance = dict(zip(feature_names, rf_final.feature_importances_))
+pickle.dump(feature_importance, open("feature_importance.pkl", "wb"))
+
+print("✅ All Models, Scaler, Feature Names, and Feature Importance saved successfully!")
 
