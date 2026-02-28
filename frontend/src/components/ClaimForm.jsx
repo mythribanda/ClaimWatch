@@ -18,7 +18,6 @@ const initialState = {
   incident_city: "",
   property_damage: "",
   police_report_available: "",
-  fraud_reported: "",
   auto_make: "",
   auto_model: "",
   months_as_customer: "",
@@ -447,26 +446,6 @@ const ClaimForm = ({ onResult }) => {
             id="police_report_available"
             name="police_report_available"
             value={form.police_report_available}
-            onChange={handleChange}
-            style={inputStyle}
-          >
-            <option value="">Select option</option>
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-        </div>
-
-        <div>
-          <label
-            htmlFor="fraud_reported"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
-          >
-            Fraud Reported
-          </label>
-          <select
-            id="fraud_reported"
-            name="fraud_reported"
-            value={form.fraud_reported}
             onChange={handleChange}
             style={inputStyle}
           >
