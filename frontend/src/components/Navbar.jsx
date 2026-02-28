@@ -1,16 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 const Navbar = () => {
   const location = useLocation();
+  const theme = useTheme();
 
   const linkStyle = (path) => ({
     padding: "0.5rem 1rem",
     borderRadius: "999px",
     textDecoration: "none",
-    color: location.pathname === path ? "#0f172a" : "#e5e7eb",
-    backgroundColor: location.pathname === path ? "#38bdf8" : "transparent",
+    color: location.pathname === path ? "#ffffff" : theme.colors.textSecondary,
+    backgroundColor:
+      location.pathname === path ? theme.colors.primary : "transparent",
     fontSize: "0.9rem",
-    fontWeight: 500
+    fontWeight: 500,
+    transition: "all 0.3s ease",
   });
 
   return (
@@ -20,8 +24,11 @@ const Navbar = () => {
         top: 0,
         zIndex: 10,
         backdropFilter: "blur(10px)",
-        background: "rgba(15, 23, 42, 0.9)",
-        borderBottom: "1px solid rgba(148, 163, 184, 0.3)"
+        background: theme.isDark
+          ? "rgba(15, 23, 42, 0.95)"
+          : "rgba(248, 250, 252, 0.95)",
+        borderBottom: `1px solid ${theme.colors.border}`,
+        transition: "all 0.3s ease",
       }}
     >
       <nav
@@ -31,13 +38,30 @@ const Navbar = () => {
           padding: "0.9rem 1rem",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
-        <span style={{ fontWeight: 700, fontSize: "1.1rem", letterSpacing: "0.04em" }}>
-          Claim Watch
-        </span>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <span style={{ fontSize: "1.3rem" }}>🛡️</span>
+          <span
+            style={{
+              fontWeight: 700,
+              fontSize: "1.1rem",
+              letterSpacing: "0.04em",
+              color: theme.colors.text,
+            }}
+          >
+            ClaimWatch
+          </span>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: "0.5rem",
+            alignItems: "center",
+          }}
+        >
           <Link to="/" style={linkStyle("/")}>
             Home
           </Link>
@@ -47,6 +71,35 @@ const Navbar = () => {
           <Link to="/dashboard" style={linkStyle("/dashboard")}>
             Dashboard
           </Link>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={() => theme.setIsDark(!theme.isDark)}
+            style={{
+              marginLeft: "1rem",
+              padding: "0.5rem 0.75rem",
+              backgroundColor: theme.colors.bgSecondary,
+              border: `1px solid ${theme.colors.border}`,
+              borderRadius: "0.4rem",
+              cursor: "pointer",
+              fontSize: "1rem",
+              transition: "all 0.3s ease",
+              color: theme.colors.text,
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = theme.colors.primary;
+              e.target.style.color = "#ffffff";
+              e.target.style.transform = "scale(1.05)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = theme.colors.bgSecondary;
+              e.target.style.color = theme.colors.text;
+              e.target.style.transform = "scale(1)";
+            }}
+            title={theme.isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          >
+            {theme.isDark ? "☀️" : "🌙"}
+          </button>
         </div>
       </nav>
     </header>

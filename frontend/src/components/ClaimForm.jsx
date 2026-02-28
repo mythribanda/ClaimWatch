@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { predictFraud } from "../services/api";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 const initialState = {
   policy_state: "",
@@ -46,6 +47,7 @@ const ClaimForm = ({ onResult }) => {
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const theme = useTheme();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -78,19 +80,32 @@ const ClaimForm = ({ onResult }) => {
     }
   };
 
+  const inputStyle = {
+    width: "100%",
+    padding: "0.6rem 0.7rem",
+    borderRadius: "0.6rem",
+    border: `1px solid ${theme.colors.border}`,
+    backgroundColor: theme.colors.bgSecondary,
+    color: theme.colors.text,
+    fontSize: "0.9rem",
+    transition: "all 0.3s ease",
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
       style={{
         marginTop: "1rem",
         padding: "1.5rem",
-        borderRadius: "1rem",
-        backgroundColor: "rgba(15,23,42,0.9)",
-        border: "1px solid rgba(148, 163, 184, 0.4)",
-        boxShadow: "0 14px 30px rgba(15,23,42,0.8)"
+        borderRadius: "0.75rem",
+        backgroundColor: theme.colors.bgSecondary,
+        border: `1px solid ${theme.colors.border}`,
+        boxShadow: theme.isDark
+          ? "0 14px 30px rgba(15,23,42,0.8)"
+          : "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
-      <h2 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "1rem" }}>
+      <h2 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "1rem", color: theme.colors.text }}>
         Claim Details
       </h2>
 
@@ -104,7 +119,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="policy_state"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Policy State
           </label>
@@ -113,14 +128,7 @@ const ClaimForm = ({ onResult }) => {
             name="policy_state"
             value={form.policy_state}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select state</option>
             <option value="OH">OH</option>
@@ -132,7 +140,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="policy_csl"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Policy CSL
           </label>
@@ -141,14 +149,7 @@ const ClaimForm = ({ onResult }) => {
             name="policy_csl"
             value={form.policy_csl}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select CSL</option>
             <option value="100/300">100/300</option>
@@ -160,7 +161,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="insured_sex"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Insured Sex
           </label>
@@ -169,14 +170,7 @@ const ClaimForm = ({ onResult }) => {
             name="insured_sex"
             value={form.insured_sex}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select sex</option>
             <option value="MALE">MALE</option>
@@ -187,7 +181,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="insured_education_level"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Education Level
           </label>
@@ -196,14 +190,7 @@ const ClaimForm = ({ onResult }) => {
             name="insured_education_level"
             value={form.insured_education_level}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select level</option>
             <option value="JD">JD</option>
@@ -219,7 +206,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="insured_occupation"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Occupation
           </label>
@@ -228,14 +215,7 @@ const ClaimForm = ({ onResult }) => {
             name="insured_occupation"
             value={form.insured_occupation}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select occupation</option>
             <option value="craft-repair">craft-repair</option>
@@ -258,7 +238,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="insured_hobbies"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Hobbies
           </label>
@@ -267,14 +247,7 @@ const ClaimForm = ({ onResult }) => {
             name="insured_hobbies"
             value={form.insured_hobbies}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select hobby</option>
             <option value="sleeping">sleeping</option>
@@ -302,7 +275,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="insured_relationship"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Relationship
           </label>
@@ -311,14 +284,7 @@ const ClaimForm = ({ onResult }) => {
             name="insured_relationship"
             value={form.insured_relationship}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select relationship</option>
             <option value="husband">husband</option>
@@ -333,7 +299,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="incident_type"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Incident Type
           </label>
@@ -342,14 +308,7 @@ const ClaimForm = ({ onResult }) => {
             name="incident_type"
             value={form.incident_type}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select type</option>
             <option value="Single Vehicle Collision">Single Vehicle Collision</option>
@@ -362,7 +321,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="collision_type"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Collision Type
           </label>
@@ -371,14 +330,7 @@ const ClaimForm = ({ onResult }) => {
             name="collision_type"
             value={form.collision_type}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select collision</option>
             <option value="Rear Collision">Rear Collision</option>
@@ -391,7 +343,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="incident_severity"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Incident Severity
           </label>
@@ -400,27 +352,20 @@ const ClaimForm = ({ onResult }) => {
             name="incident_severity"
             value={form.incident_severity}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
             <option value="">Select severity</option>
+            <option value="Trivial Damage">Trivial Damage</option>
             <option value="Minor Damage">Minor Damage</option>
             <option value="Major Damage">Major Damage</option>
             <option value="Total Loss">Total Loss</option>
-            <option value="Trivial Damage">Trivial Damage</option>
           </select>
         </div>
 
         <div>
           <label
             htmlFor="authorities_contacted"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Authorities Contacted
           </label>
@@ -429,88 +374,52 @@ const ClaimForm = ({ onResult }) => {
             name="authorities_contacted"
             value={form.authorities_contacted}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
-            <option value="">Select authority</option>
-            <option value="Police">Police</option>
-            <option value="Fire">Fire</option>
-            <option value="Ambulance">Ambulance</option>
-            <option value="Other">Other</option>
-            <option value="None">None</option>
+            <option value="">Select option</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
           </select>
         </div>
 
         <div>
           <label
             htmlFor="incident_state"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Incident State
           </label>
-          <select
+          <input
             id="incident_state"
             name="incident_state"
+            type="text"
             value={form.incident_state}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
-          >
-            <option value="">Select state</option>
-            <option value="OH">OH</option>
-            <option value="IL">IL</option>
-            <option value="IN">IN</option>
-          </select>
+            style={inputStyle}
+          />
         </div>
 
         <div>
           <label
             htmlFor="incident_city"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Incident City
           </label>
-          <select
+          <input
             id="incident_city"
             name="incident_city"
+            type="text"
             value={form.incident_city}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
-          >
-            <option value="">Select city</option>
-            <option value="Columbus">Columbus</option>
-            <option value="Arlington">Arlington</option>
-            <option value="Springfield">Springfield</option>
-            <option value="Riverwood">Riverwood</option>
-            <option value="Hillsdale">Hillsdale</option>
-            <option value="Northbrook">Northbrook</option>
-            <option value="Northbend">Northbend</option>
-          </select>
+            style={inputStyle}
+          />
         </div>
 
         <div>
           <label
             htmlFor="property_damage"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Property Damage
           </label>
@@ -519,16 +428,9 @@ const ClaimForm = ({ onResult }) => {
             name="property_damage"
             value={form.property_damage}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
-            <option value="">Select</option>
+            <option value="">Select option</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
@@ -537,7 +439,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="police_report_available"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Police Report Available
           </label>
@@ -546,16 +448,9 @@ const ClaimForm = ({ onResult }) => {
             name="police_report_available"
             value={form.police_report_available}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
-            <option value="">Select</option>
+            <option value="">Select option</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
@@ -564,7 +459,7 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="fraud_reported"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Fraud Reported
           </label>
@@ -573,16 +468,9 @@ const ClaimForm = ({ onResult }) => {
             name="fraud_reported"
             value={form.fraud_reported}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           >
-            <option value="">Select</option>
+            <option value="">Select option</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
           </select>
@@ -591,129 +479,41 @@ const ClaimForm = ({ onResult }) => {
         <div>
           <label
             htmlFor="auto_make"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Auto Make
           </label>
-          <select
+          <input
             id="auto_make"
             name="auto_make"
+            type="text"
             value={form.auto_make}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
-          >
-            <option value="">Select make</option>
-            <option value="Saab">Saab</option>
-            <option value="Mercedes">Mercedes</option>
-            <option value="Dodge">Dodge</option>
-            <option value="Chevrolet">Chevrolet</option>
-            <option value="Accura">Accura</option>
-            <option value="Nissan">Nissan</option>
-            <option value="Audi">Audi</option>
-            <option value="Toyota">Toyota</option>
-            <option value="Ford">Ford</option>
-            <option value="Suburu">Suburu</option>
-            <option value="BMW">BMW</option>
-            <option value="Jeep">Jeep</option>
-            <option value="Honda">Honda</option>
-            <option value="Volkswagen">Volkswagen</option>
-          </select>
+            style={inputStyle}
+          />
         </div>
 
         <div>
           <label
             htmlFor="auto_model"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Auto Model
           </label>
-          <select
+          <input
             id="auto_model"
             name="auto_model"
+            type="text"
             value={form.auto_model}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
-          >
-            <option value="">Select model</option>
-            <option value="92x">92x</option>
-            <option value="E400">E400</option>
-            <option value="RAM">RAM</option>
-            <option value="Tahoe">Tahoe</option>
-            <option value="RSX">RSX</option>
-            <option value="95">95</option>
-            <option value="Pathfinder">Pathfinder</option>
-            <option value="A5">A5</option>
-            <option value="Camry">Camry</option>
-            <option value="F150">F150</option>
-            <option value="A3">A3</option>
-            <option value="Highlander">Highlander</option>
-            <option value="Neon">Neon</option>
-            <option value="MDX">MDX</option>
-            <option value="Maxima">Maxima</option>
-            <option value="Legacy">Legacy</option>
-            <option value="TL">TL</option>
-            <option value="Impreza">Impreza</option>
-            <option value="Forrestor">Forrestor</option>
-            <option value="Escape">Escape</option>
-            <option value="Corolla">Corolla</option>
-            <option value="3 Series">3 Series</option>
-            <option value="C300">C300</option>
-            <option value="Wrangler">Wrangler</option>
-            <option value="M5">M5</option>
-            <option value="X5">X5</option>
-            <option value="Civic">Civic</option>
-            <option value="Passat">Passat</option>
-            <option value="Silverado">Silverado</option>
-            <option value="CRV">CRV</option>
-            <option value="93">93</option>
-            <option value="Accord">Accord</option>
-            <option value="X6">X6</option>
-            <option value="Malibu">Malibu</option>
-            <option value="Fusion">Fusion</option>
-            <option value="Jetta">Jetta</option>
-            <option value="ML350">ML350</option>
-            <option value="Ultima">Ultima</option>
-            <option value="Grand Cherokee">Grand Cherokee</option>
-          </select>
+            style={inputStyle}
+          />
         </div>
-      </div>
 
-      <h3
-        style={{
-          fontSize: "0.95rem",
-          fontWeight: 600,
-          marginTop: "1.5rem",
-          marginBottom: "0.75rem"
-        }}
-      >
-        Additional Numeric & Date Details
-      </h3>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1rem"
-        }}
-      >
         <div>
           <label
             htmlFor="months_as_customer"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Months as Customer
           </label>
@@ -723,21 +523,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.months_as_customer}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="age"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Age
           </label>
@@ -747,47 +540,33 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.age}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="policy_number"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Policy Number
           </label>
           <input
             id="policy_number"
             name="policy_number"
-            type="number"
+            type="text"
             value={form.policy_number}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="policy_deductable"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
-            Policy Deductible
+            Policy Deductable
           </label>
           <input
             id="policy_deductable"
@@ -795,21 +574,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.policy_deductable}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="policy_annual_premium"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Policy Annual Premium
           </label>
@@ -817,24 +589,16 @@ const ClaimForm = ({ onResult }) => {
             id="policy_annual_premium"
             name="policy_annual_premium"
             type="number"
-            step="any"
             value={form.policy_annual_premium}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="umbrella_limit"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Umbrella Limit
           </label>
@@ -844,45 +608,31 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.umbrella_limit}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="insured_zip"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
-            Insured ZIP
+            Insured Zip
           </label>
           <input
             id="insured_zip"
             name="insured_zip"
-            type="number"
+            type="text"
             value={form.insured_zip}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="capital_gains"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Capital Gains
           </label>
@@ -892,21 +642,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.capital_gains}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="capital_loss"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Capital Loss
           </label>
@@ -916,23 +659,16 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.capital_loss}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="incident_hour_of_the_day"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
-            Incident Hour (0–23)
+            Incident Hour
           </label>
           <input
             id="incident_hour_of_the_day"
@@ -942,23 +678,16 @@ const ClaimForm = ({ onResult }) => {
             max="23"
             value={form.incident_hour_of_the_day}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="number_of_vehicles_involved"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
-            Number of Vehicles Involved
+            Vehicles Involved
           </label>
           <input
             id="number_of_vehicles_involved"
@@ -966,21 +695,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.number_of_vehicles_involved}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="bodily_injuries"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Bodily Injuries
           </label>
@@ -990,21 +712,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.bodily_injuries}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="witnesses"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Witnesses
           </label>
@@ -1014,21 +729,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.witnesses}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="total_claim_amount"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Total Claim Amount
           </label>
@@ -1038,21 +746,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.total_claim_amount}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="injury_claim"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Injury Claim
           </label>
@@ -1062,21 +763,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.injury_claim}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="property_claim"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Property Claim
           </label>
@@ -1086,21 +780,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.property_claim}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="vehicle_claim"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Vehicle Claim
           </label>
@@ -1110,21 +797,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.vehicle_claim}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="auto_year"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Auto Year
           </label>
@@ -1134,21 +814,14 @@ const ClaimForm = ({ onResult }) => {
             type="number"
             value={form.auto_year}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="policy_bind_date"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Policy Bind Date
           </label>
@@ -1158,21 +831,14 @@ const ClaimForm = ({ onResult }) => {
             type="date"
             value={form.policy_bind_date}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
 
         <div>
           <label
             htmlFor="incident_date"
-            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem" }}
+            style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.25rem", color: theme.colors.textSecondary }}
           >
             Incident Date
           </label>
@@ -1182,14 +848,7 @@ const ClaimForm = ({ onResult }) => {
             type="date"
             value={form.incident_date}
             onChange={handleChange}
-            style={{
-              width: "100%",
-              padding: "0.6rem 0.7rem",
-              borderRadius: "0.6rem",
-              border: "1px solid rgba(148,163,184,0.6)",
-              backgroundColor: "#020617",
-              color: "#e5e7eb"
-            }}
+            style={inputStyle}
           />
         </div>
       </div>
@@ -1199,7 +858,7 @@ const ClaimForm = ({ onResult }) => {
           style={{
             marginTop: "0.75rem",
             fontSize: "0.85rem",
-            color: "#fca5a5"
+            color: theme.colors.danger
           }}
         >
           {error}
@@ -1212,22 +871,28 @@ const ClaimForm = ({ onResult }) => {
         style={{
           marginTop: "1.25rem",
           padding: "0.7rem 1.6rem",
-          borderRadius: "999px",
+          borderRadius: "0.5rem",
           border: "none",
           cursor: loading ? "not-allowed" : "pointer",
-          background:
-            "linear-gradient(135deg, #38bdf8, #4f46e5)",
-          color: "#0f172a",
+          background: theme.colors.primary,
+          color: "#ffffff",
           fontWeight: 600,
           fontSize: "0.95rem",
-          boxShadow: "0 12px 25px rgba(56,189,248,0.4)"
+          boxShadow: `0 12px 25px ${theme.isDark ? "rgba(99, 102, 241, 0.4)" : "rgba(99, 102, 241, 0.3)"}`,
+          opacity: loading ? 0.7 : 1,
+          transition: "all 0.3s ease",
+        }}
+        onMouseEnter={(e) => {
+          if (!loading) e.target.style.transform = "translateY(-2px)";
+        }}
+        onMouseLeave={(e) => {
+          if (!loading) e.target.style.transform = "translateY(0)";
         }}
       >
-        {loading ? "Predicting..." : "Predict Fraud"}
+        {loading ? "Analyzing..." : "Analyze Claim"}
       </button>
     </form>
   );
 };
 
 export default ClaimForm;
-
